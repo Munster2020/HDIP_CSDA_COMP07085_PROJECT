@@ -1,6 +1,6 @@
 from flask import Flask, url_for, request, redirect, abort, jsonify
 
-from MoviesDao import moviesDAO
+from MoviesDao import moviesDao
 
 
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
@@ -8,12 +8,12 @@ app = Flask(__name__, static_url_path='', static_folder='staticpages')
 
 @app.route('/dvds')
 def getAll():
-    return jsonify(moviesDAO.getAll())
+    return jsonify(moviesDao.getAll())
 
 
 @app.route('/dvds/<int:id>')
 def findById(id):
-    return jsonify(moviesDAO.findByID(id))
+    return jsonify(moviesDao.findByID(id))
 
 
 @app.route('/dvds', methods=['POST'])
@@ -28,7 +28,7 @@ def create():
         "genre": request.json["genre"],
         "price": request.json["price"]
     }
-    return jsonify(moviesDAO.create(dvd))
+    return jsonify(moviesDao.create(dvd))
 
 
 @app.route('/dvds/<int:id>', methods=['PUT'])
@@ -51,7 +51,7 @@ def update(id):
 
 @app.route('/dvds/<int:id>', methods=['DELETE'])
 def delete(id):
-    moviesDAO.delete(id)
+    moviesDao.delete(id)
     return jsonify({"done": True})
 
 

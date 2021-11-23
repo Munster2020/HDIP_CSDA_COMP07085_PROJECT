@@ -1,7 +1,7 @@
 import mysql.connector
 import dbconfig as cfg
 
-class MoviesDAO:
+class MoviesDao:
     db = ""
 
     def __init__(self):
@@ -9,7 +9,7 @@ class MoviesDAO:
             host=cfg.mysql["host"],
             user=cfg.mysql["user"],
             password=cfg.mysql["password"],
-            database=cfg.mysql["datarep"]
+            database=cfg.mysql["database"]
         )
 
     def create(self, dvds):
@@ -77,4 +77,4 @@ class MoviesDAO:
         return dvds
 
 
-moviesDAO = MoviesDAO()
+moviesDao = MoviesDao()

@@ -1,7 +1,6 @@
 import mysql.connector
 import dbconfig as cfg
 
-
 class MoviesDAO:
     db = ""
 

@@ -2,32 +2,48 @@ import mysql.connector
 import dbconfig as cfg
 
 class MoviesDao:
-    db = ""
+
+    def initConnectToDB(self):
+      db = mysql.connector.connect(
+         host=      cfg.mysql['host'],
+         user=      cfg.mysql['username'],
+         password=  cfg.mysql['password'],
+         database=  cfg.mysql['database'],
+         pool_name='my_connection_pool',
+         pool_size=5
+      )
+      return db
+
+    def getConnection(self):
+      db = mysql.connector.connect(
+         pool_name='my_connection_pool'
+      )
+      return db
 
     def __init__(self):
-        self.db = mysql.connector.connect(
-            host=cfg.mysql["host"],
-            user=cfg.mysql["user"],
-            password=cfg.mysql["password"],
-            database=cfg.mysql["database"]
-        )
+      db = self.initConnectToDB()
+      db.close()
 
-    def create(self, dvds):
-        cursor = self.db.cursor()
+    def create(self, dvd):
+        db = self.getConnection()
+        cursor = db.cursor()
         sql = "insert into dvds (id, title, director, genre, price) values (%s, %s, %s, %s, %s)"
         values = [
-            dvds['id'],
-            dvds['title'],
-            dvds['director'],
-            dvds['genre'],
-            dvds['price']
+            dvd['id'],
+            dvd['title'],
+            dvd['director'],
+            dvd['genre'],
+            dvd['price']
         ]
         cursor.execute(sql, values)
-        self.db.commit()
-        return cursor.lastrowid
+        db.commit()
+        lastRowId = cursor.lastrowid
+        db.close()
+        return lastRowId
 
     def getAll(self):
-        cursor = self.db.cursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql = "select * from dvds"
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -35,46 +51,55 @@ class MoviesDao:
         for result in results:
             resultAsDict = self.convertToDict(result)
             returnArray.append(resultAsDict)
+        db.close()
         return returnArray
 
     def findByID(self, id):
-        cursor = self.db.cursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql = "select * from dvds where id = %s"
         values = [id]
         cursor.execute(sql, values)
         result = cursor.fetchone()
-        return self.convertToDict(result)
+        resultAsDict = self.convertToDict(result)
+        db.close()
+        return resultAsDict
 
-    def update(self, dvds):
-        cursor = self.db.cursor()
+    def update(self, dvd):
+        db = self.getConnection()
+        cursor = db.cursor()
         sql = "update dvds set title = %s, director = %s, genre = %s, price = %s where id = %s"
         values = [
-            dvds['title'],
-            dvds['director'],
-            dvds['genre'],
-            dvds['price'],
-            dvds['id']
+            dvd['title'],
+            dvd['director'],
+            dvd['genre'],
+            dvd['price'],
+            dvd['id']
         ]
         cursor.execute(sql, values)
-        self.db.commit()
-        return dvds
+        db.commit()
+        db.close
+        return dvd
 
     def delete(self, id):
-        cursor = self.db.cursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql = "delete from dvds where id = %s"
         values = [id]
         cursor.execute(sql, values)
-        return {}
+        db.commit()
+        db.close
+        return{}
 
     def convertToDict(self, result):
         colnames = ['id', 'title', 'director', 'genre', 'price']
-        dvds = {}
+        dvd = {}
 
         if result:
             for i, colName in enumerate(colnames):
                 value = result[i]
-                dvds[colName] = value
-        return dvds
+                dvd[colName] = value
+        return dvd
 
 
 moviesDao = MoviesDao()

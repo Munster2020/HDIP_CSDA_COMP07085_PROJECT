@@ -1,14 +1,25 @@
 <html>
 <head>
-    <title>dvds</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <title>DVD World</title>
+    <!--Use font type not installed on a computer by specifying an url.-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
+    <style type="text/css">
+        .header {
+            font-family: 'Nunito', sans-serif;
+            font-size: 20px;
+            color: black;
+            text-align: left;
+        }
         body {
-            margin: 50px;
             background-color: white;
-            font-family: Verdana, Geneva, Tahoma, sans-serif
+            font-family: 'Nunito', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            color: black;
         }
 
         button {
@@ -16,12 +27,12 @@
         }
         h1 {
             margin: 20px;
-            color: green;
+            color:green;
             text-align: center;
         }
         h2 {
             margin: 20px;
-            color: green;
+            color:green;
         }
         .center {
             display: block;
@@ -32,29 +43,31 @@
     </style>
 </head>
 <body>
-    <h1>dvds</h1>
+    <div class="header">
+        <h1>my.dvdWorld.com</h1>
+    </div>
     <div id="create-update" style="display:none">
         <h2><span id="createLabel">Create a</span> <span id="updateLabel">Update</span> dvd</h2>
         <table class = "table" id ="createUpdateForm" >
             <tr>
                 <td>id</td>
-                <td><input type="number" name="id" id ="id"></td>
+                <td><input type="number" name="ID" id ="id"></td>
             </tr>
             <tr>
                 <td>title</td>
-                <td><input type="text" name="title"></td>
+                <td><input type="text" name="Title"></td>
             </tr>
             <tr>
                 <td>director</td>
-                <td><input type="text" name="director"></td>
+                <td><input type="text" name="Director"></td>
             </tr>
             <tr>
                 <td>genre</td>
-                <td><input type="text" name="genre"></td>
+                <td><input type="text" name="Genre"></td>
             </tr>
             <tr>
                 <td>price</td>
-                <td><input type="number" name="price"></td>
+                <td><input type="number" name="Price"></td>
             </tr>
             <tr>
                 <td></td>
@@ -68,10 +81,10 @@
         <table id = "dvdTable" class = "table">
             <tr>
                 <th>ID</th>
-                <th>TITLE</th>
-                <th>DIRECTOR</th>
-                <th>GENRE</th>
-                <th colspan="2">PRICE</th>
+                <th>Title</th>
+                <th>Director</th>
+                <th>Genre</th>
+                <th>Price</th>
             </tr>                                       
         </table>
     </div>
@@ -109,22 +122,22 @@
         function populateForm(dvd){
             var form = document.getElementById('createUpdateForm')
 
-            form.querySelector('input[name="id"]').value = dvd.id
-            form.querySelector('input[name="id"]').disabled = true
-            form.querySelector('input[name="title"]').value = dvd.title
-            form.querySelector('input[name="director"]').value = dvd.director
-            form.querySelector('input[name="genre"]').value = dvd.genre
-            form.querySelector('input[name="price"]').value =  dvd.price
+            form.querySelector('input[name="ID"]').value = dvd.id
+            form.querySelector('input[name="ID"]').disabled = true
+            form.querySelector('input[name="Title"]').value = dvd.title
+            form.querySelector('input[name="Director"]').value = dvd.director
+            form.querySelector('input[name="Genre"]').value = dvd.genre
+            form.querySelector('input[name="Price"]').value =  dvd.price
         }
         function clearForm(){
             var form = document.getElementById('createUpdateForm')
 
-            form.querySelector('input[name="id"]').value = ''
-            form.querySelector('input[name="id"]').disabled = false
-            form.querySelector('input[name="title"]').value = ''
-            form.querySelector('input[name="director"]').value = ''
-            form.querySelector('input[name="genre"]').value = ''
-            form.querySelector('input[name="price"]').value =  ''
+            form.querySelector('input[name="ID"]').value = ''
+            form.querySelector('input[name="ID"]').disabled = false
+            form.querySelector('input[name="Title"]').value = ''
+            form.querySelector('input[name="Director"]').value = ''
+            form.querySelector('input[name="Genre"]').value = ''
+            form.querySelector('input[name="Price"]').value =  ''
         }
         function doCreate(){
             //console.log("in")
@@ -149,15 +162,17 @@
         function doUpdate(){
             dvd = getDvdFromForm()
             updateServer(dvd)
-        }
+            }
+
         function updateServer(dvd){
             $.ajax({
-                url:'/dvds/'+dvd.id,
+                url: '/dvds/'+dvd.id,
                 data: JSON.stringify(dvd),
                 method: 'PUT',
                 dataType: 'JSON',
                 contentType: "application/json; charset-utf-8",
                 success: function(result){
+                    console.log(result)
                     updateTableRow(dvd)
                     showDisplay()
                     clearForm()
@@ -195,11 +210,11 @@
         function getDvdFromForm(){
             var form = document.getElementById('createUpdateForm')
             var dvd = {}
-            dvd.id = form.querySelector('input[name="id"]').value
-            dvd.title = form.querySelector('input[name="title"]').value
-            dvd.director = form.querySelector('input[name="director"]').value
-            dvd.genre = form.querySelector('input[name="genre"]').value
-            dvd.price = form.querySelector('input[name="price"]').value
+            dvd.id = form.querySelector('input[name="ID"]').value
+            dvd.title = form.querySelector('input[name="Title"]').value
+            dvd.director = form.querySelector('input[name="Director"]').value
+            dvd.genre = form.querySelector('input[name="Genre"]').value
+            dvd.price = form.querySelector('input[name="Price"]').value
             //console.log("dvd")
             return dvd
         }
@@ -228,26 +243,27 @@
             //console.log("working")
             tableElem = document.getElementById("dvdTable")
             rowElem = tableElem.insertRow(-1)
-            rowElem.setAttribute("id", dvd.id)
+            rowElem.setAttribute("ID", dvd.id)
             cell1 = rowElem.insertCell(0)
             cell1.innerHTML = dvd.id
-            rowElem.setAttribute("title", dvd.title)
+            rowElem.setAttribute("Title", dvd.title)
             cell2 = rowElem.insertCell(1)
             cell2.innerHTML = dvd.title
-            rowElem.setAttribute("director", dvd.director)
+            rowElem.setAttribute("Director", dvd.director)
             cell3 = rowElem.insertCell(2)
             cell3.innerHTML = dvd.director
-            rowElem.setAttribute("genre", dvd.genre)
-            cell3 = rowElem.insertCell(3)
-            cell3.innerHTML = dvd.genre
-            rowElem.setAttribute("price", dvd.price)
-            cell4 = rowElem.insertCell(4)
-            cell4.innerHTML = dvd.price
-            cell5 = rowElem.insertCell(5)
-            cell5.innerHTML = '<button onclick ="showUpdate(this)" type="button" class="btn btn-success">Update</button>'
-            cell6 = rowElem.insertCell(6)
-            cell6.innerHTML = '<button onclick ="doDelete(this)" type="button" class="btn btn-success">Delete</button>'
-            }   
+            rowElem.setAttribute("Genre", dvd.genre)
+            cell4 = rowElem.insertCell(3)
+            cell4.innerHTML = dvd.genre
+            rowElem.setAttribute("Price", dvd.price)
+            cell5 = rowElem.insertCell(4)
+            cell5.innerHTML = dvd.price
+            cell6 = rowElem.insertCell(5)
+            cell6.innerHTML = '<button onclick ="showUpdate(this)" type="button" class="btn btn-success">Update</button>'
+            cell7 = rowElem.insertCell(6)
+            cell7.innerHTML = '<button onclick ="doDelete(this)" type="button" class="btn btn-success">Delete</button>'
+            }
+        
         populateTable()
     </script>
 </body>

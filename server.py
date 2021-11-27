@@ -10,11 +10,9 @@ app = Flask(__name__, static_url_path='', static_folder='template')
 def getAll():
     return jsonify(moviesDao.getAll())
 
-
 @app.route('/dvds/<int:id>')
 def findById(id):
-    return jsonify(moviesDao.findByID(id))
-
+    return jsonify(moviesDao.findById(id))
 
 @app.route('/dvds', methods=['POST'])
 def create():
@@ -28,15 +26,16 @@ def create():
         "genre": request.json["genre"],
         "price": request.json["price"]
     }
-    return jsonify(moviesDao.create(dvd))
 
+    return jsonify(moviesDao.create(dvd))
 
 @app.route('/dvds/<int:id>', methods=['PUT'])
 def update(id):
-    foundDvd = []
-    if len(foundDvd) == 0:
+    foundDvd = moviesDao.findById(id)
+    print(foundDvd)
+    if (foundDvd) == {}:
         return jsonify({}), 404
-    currentDvd = foundDvd[0]
+    currentDvd = foundDvd
     if 'title' in request.json:
         currentDvd['title'] = request.json['title']
     if 'director' in request.json:
@@ -45,15 +44,13 @@ def update(id):
         currentDvd['genre'] = request.json['genre']
     if 'price' in request.json:
         currentDvd['price'] = request.json['price']
-
+    moviesDao.update(currentDvd)
     return jsonify(currentDvd)
-
 
 @app.route('/dvds/<int:id>', methods=['DELETE'])
 def delete(id):
     moviesDao.delete(id)
     return jsonify({"done": True})
-
 
 if __name__ == "__main__":
     app.run(debug=True)

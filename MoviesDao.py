@@ -54,7 +54,7 @@ class MoviesDao:
         db.close()
         return returnArray
 
-    def findByID(self, id):
+    def findById(self, id):
         db = self.getConnection()
         cursor = db.cursor()
         sql = "select * from dvds where id = %s"

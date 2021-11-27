@@ -3,7 +3,7 @@ from flask import Flask, url_for, request, redirect, abort, jsonify
 from MoviesDao import moviesDao
 
 
-app = Flask(__name__, static_url_path='', static_folder='staticpages')
+app = Flask(__name__, static_url_path='', static_folder='template')
 
 
 @app.route('/dvds')

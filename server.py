@@ -31,24 +31,28 @@ def create():
 
     return jsonify(moviesDao.create(dvd))
 
-
+#curl -X PUT -H "content-type:application/json" -d "{\"title\":\"Aliens\", \"director\":\"David Cameron\", \"genre\":\"Science Fiction\", \"price\":20}" http://127.0.0.1:5000/dvds/2
 @app.route('/dvds/<int:id>', methods=['PUT'])
 def update(id):
     foundDvd = moviesDao.findById(id)
-    print(foundDvd)
-    if (foundDvd) == {}:
-        return jsonify({}), 404
-    currentDvd = foundDvd
-    if 'title' in request.json:
-        currentDvd['title'] = request.json['title']
-    if 'director' in request.json:
-        currentDvd['director'] = request.json['director']
-    if 'genre' in request.json:
-        currentDvd['genre'] = request.json['genre']
-    if 'price' in request.json:
-        currentDvd['price'] = request.json['price']
-    moviesDao.update(currentDvd)
-    return jsonify(currentDvd)
+    if not foundDvd:
+        abort(404)
+    if not request.json:
+        abort(404)
+    reqJson=request.json
+    if 'price' in reqJson and type(reqJson['price']) is not int:
+        abort(400)
+    if 'title' in reqJson:
+        foundDvd['title']=reqJson['title']
+    if 'director' in reqJson:
+        foundDvd['director']=reqJson['director']
+    if 'genre' in reqJson:
+        foundDvd['genre']=reqJson['genre']
+    if 'price' in reqJson:
+        foundDvd['price']=reqJson['price']
+    values=(foundDvd['title'], foundDvd['director'], foundDvd['genre'], foundDvd['price'])
+    moviesDao.update(values)
+    return jsonify(foundDvd)
 
 # curl -X DELETE http://127.0.0.1:5000/dvds/87
 @app.route('/dvds/<int:id>', methods=['DELETE'])

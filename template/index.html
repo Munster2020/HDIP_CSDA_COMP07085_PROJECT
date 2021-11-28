@@ -140,9 +140,8 @@
         }
         function doCreate(){
             dvd = getDvdFromForm()
-            host=window.location.origin
             $.ajax({
-                url:host +'/dvds',
+                url:'/dvds',
                 data: JSON.stringify(dvd),
                 method: 'POST',
                 dataType: 'JSON',
@@ -164,9 +163,8 @@
             }
 
         function updateServer(dvd){
-            host=window.location.origin
             $.ajax({
-                url: host+'/dvds/'+dvd.id,
+                url:'/dvds/'+dvd.id,
                 data: JSON.stringify(dvd),
                 method: 'PUT',
                 dataType: 'JSON',
